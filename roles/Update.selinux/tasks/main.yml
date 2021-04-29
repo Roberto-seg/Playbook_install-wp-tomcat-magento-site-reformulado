@@ -1,0 +1,12 @@
+---
+- name: Update S.O
+  yum :
+    name: '*'
+    state: latest
+    update_cache: yes
+  tags:
+    - Install  
+
+- name: Desabilitando o SELinux
+  selinux:
+    state: disabled

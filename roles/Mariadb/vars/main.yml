@@ -1,0 +1,9 @@
+---
+# vars file for Mariadb
+    passwd_db: cap1267
+    mysql_database: wpdatabase
+    mysql_user: wpuser
+    mysql_senha: adminadmin
+    mysql_database2: magento
+    mysql_user2: magentouser
+    mysql_senha2: admin123

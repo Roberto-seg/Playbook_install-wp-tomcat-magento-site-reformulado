@@ -1,0 +1,8 @@
+---
+# tasks file for certbot
+- name: Instalando certbot
+  yum:
+    name: python2-certbot-nginx
+    state: present
+- name: Aplicando nos sites
+  shell: certbot --nginx -d blog1.segundorobtech.tk	-d www.segundorobtech.tk	-d tom1.segundorobtech.tk  -d loja1.segundorobtech.tk --email robertosilvaseg0@gmail.com --agree-tos

@@ -1,0 +1,19 @@
+---
+# tasks file for Nginx
+- name: Baixando epel-release
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Instalando o nginx
+  yum:
+     name: nginx
+     state: present
+- name: Start Nginx
+  service:
+      name: nginx
+      state: started  
+- name: Habilitando Nginx
+  service:
+      name: nginx
+      enabled: yes

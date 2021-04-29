@@ -1,0 +1,20 @@
+---
+  - hosts: srv_local
+    remote_user: centos
+    become: yes
+    become_method: sudo
+
+
+    roles: 
+      - Update.selinux 
+      - Nginx
+      - php7.2
+      - Mariadb 
+      - Criando_diretorios
+      - wordpress
+      - Java-Tomcat
+      - site-simples
+      - Magento
+      - certbot
+
+

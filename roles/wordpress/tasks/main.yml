@@ -1,0 +1,67 @@
+---
+# tasks file for wordpress
+
+- name: Download Wordpress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /var/www/html/blog1.segundorobtech.tk
+- name: Descompactar wordpr7
+  unarchive:
+    src: /var/www/html/blog1.segundorobtech.tk/wordpress-5.7.1.tar.gz
+    dest: /var/www/html/blog1.segundorobtech.tk
+    remote_src: yes
+- name: Criando /var/www/html/blog1.segundorobtech.tk/logs
+  file:
+    path: /var/www/html/blog1.segundorobtech.tk/logs
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+- name: Adicionando arquivo .conf do blog1
+  template:
+    src: wpconfig.conf.j2
+    dest: "/etc/nginx/conf.d/blog1.segundorobtech.tk.conf"
+- name: Criando /var/www/html/blog1.segundorobtech.tk/logs
+  file:
+    path: /var/www/html/blog1.segundorobtech.tk/logs
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+- name: Adicoinando wp-config
+  template:
+    src: wp-config.j2
+    dest: /var/www/html/blog1.segundorobtech.tk/wordpress/wp-config.php
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+- name: Restart PHP
+  service:
+    name: php-fpm
+    state: restarted
+- name: Restart MariaDB
+  service:
+    name: mariadb
+    state: restarted
+
+- name: Criar database wordpress
+  mysql_db:
+    name: "{{ mysql_database2 }}"
+    state: present
+    login_user: root
+    login_password: "{{ passwd_db }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+- name: Criando usuário do wordpress e acessos
+  mysql_user:
+    name: "{{ mysql_user2 }}"
+    password: "{{ mysql_senha2 }}"
+    priv: "{{ mysql_database2 }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ passwd_db }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock

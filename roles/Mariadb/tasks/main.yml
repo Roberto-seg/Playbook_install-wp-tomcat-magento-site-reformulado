@@ -1,0 +1,58 @@
+---
+# tasks file for Mariadb
+
+- name: Adicionando repo MariaDB 10.5
+  template:
+    src: repo-mariadb.j2
+    dest: /etc/yum.repos.d/MariaDB.repo
+    
+- name: Update
+  yum:
+    name: '*'
+    state: latest        
+    update_cache: yes
+
+- name: Instalação MariaDB 10.5
+  yum:
+    name: mariadb-server
+- name: Start MariaDB
+  service:
+    name: mariadb
+    state: started
+- name: Habilitando MariaDB
+  service:
+    name: mariadb
+    enabled: yes             
+- name: Instalando Mysql Python
+  yum:
+    name: MySQL-python
+- name: Restart MariaDB
+  service:
+    service: mariadb
+    state: restarted
+- name: Password root MariaDB
+  mysql_user:
+    login_user: root
+    login_password: 
+    name: root
+    host_all: yes
+    password: "{{ passwd_db }}"
+    state: present
+    login_unix_socket: /var/lib/mysql/mysql.sock
+- name: Removendo usuários anônimos
+  mysql_user:
+    name: ''
+    host: localhost
+    state: absent
+    login_user: root
+    login_password: "{{ passwd_db }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+- name: Criar database wordpressl
+  mysql_db:
+    name: "{{ mysql_database }}"
+    state: present
+    login_user: root
+    login_password: "{{ passwd_db }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+
+

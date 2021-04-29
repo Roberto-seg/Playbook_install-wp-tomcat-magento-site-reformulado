@@ -1,0 +1,23 @@
+---
+# tasks file for site-simples
+
+- name: Trocando .htl para /etc/yum.repos.d/remi-php72.repo
+  template:
+    src: estatico.j2
+    dest: /etc/nginx/conf.d/segundorobtech.tk.conf
+
+- name: Adicionando arquivo de logs
+  file:
+    path: /var/www/html/segundorobtech.tk/logs
+    state: directory
+    mode: '0755'
+
+- name: Adicionando arquivo index
+  template:
+    src: indexestatico.j2
+    dest: /var/www/html/segundorobtech.tk/index.php
+
+- name: Restart nginx
+  service:
+    name: nginx 
+    state: restarted

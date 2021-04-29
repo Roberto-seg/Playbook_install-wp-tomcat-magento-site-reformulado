@@ -1,0 +1,104 @@
+---
+# tasks file for php7.2
+- name: Instalando remi repo.
+  yum:
+    name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+    state: present
+- name: Importando remi GPG key.
+  rpm_key:
+    key: http://rpms.remirepo.net/RPM-GPG-KEY-remi
+    state: present
+- name: Enable php72 repo
+  ini_file:
+    dest: /etc/yum.repos.d/remi-php72.repo
+    section: remi-php72
+    option: enabled
+    value: 1
+- name: Instalando php72
+  yum:
+    enablerepo: remi-php72
+    name: php
+    state: latest
+    update_cache: yes
+- name: Instalando dependencias php72
+  yum:
+      enablerepo: remi-php72
+      name: [ 'php','php-fpm','php-ctype', 'php-curl', 'php-dom', 'php-gd', 'php-mbstring', 'php-hash', 'php-openssl', 'php-simplexml', 'php-spl', 'php-libxml', 'php-xsl', 'php-json', 'php-iconv', 'php-mcrypt', 'php-bcmath', 'php-pdo_mysql', 'php-pecl-zip', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip' ]
+      state: latest
+      update_cache: yes
+- name: Restart php-fpm
+  service:
+      name: php-fpm
+      state: restarted
+- name: Habilitando PHP
+  service:
+      name: php-fpm
+      enabled: yes
+- name: Alterações no user www.sock
+  replace:
+    path: /etc/php-fpm.d/www.conf
+    regexp: '(user = apache)'
+    replace: 'user = nginx'
+- name: Alterações no group www.sock
+  replace:
+    path: /etc/php-fpm.d/www.conf
+    regexp: '(group = apache)'
+    replace: 'group = nginx'
+- name: Alterações no listen www.sock
+  replace:
+    path: /etc/php-fpm.d/www.conf
+    regexp: '(listen = 127.0.0.1:9000)'
+    replace: 'listen = /run/php-fpm/www.sock'
+- name: Alterações no listen.owner www.sock
+  replace:
+    path: /etc/php-fpm.d/www.conf
+    regexp: '(;listen.owner = nobody)'
+    replace: 'listen.owner = nginx'
+- name: Alterações no listen.group www.sock
+  replace:
+    path: /etc/php-fpm.d/www.conf
+    regexp: '(;listen.group = nobody)'
+    replace: 'listen.group = nginx'
+- name: Permissão para libphp
+  file:
+    path: /var/lib/php
+    owner: root
+    group: nginx
+    mode: u+x
+    recurse: yes    
+- name: Restart php
+  service:
+    name: php-fpm
+    state: restarted
+- name: Alterando arquivos php.ini
+  replace:
+    path: /etc/php.ini
+    regexp: '(;     session.save_path = "N;/path")'
+    replace: 'session.save_path = "/var/lib/php/session"'
+- name: Alterando php.ini
+  replace:
+    path: /etc/php.ini
+    regexp: '(;cgi.fix_pathinfo=1)'
+    replace: 'cgi.fix_pathinfo=0'
+- name: Trocando dono e grupo do car lib php
+  file:
+    path: /var/lib/php
+    owner: nginx
+    group: nginx
+    recurse: yes
+- name: Trocando dono e grupo do runphp
+  file:
+    path: /run/php-fpm
+    owner: nginx
+    group: nginx
+    recurse: yes
+- name: Trocando dono e grupo do www.conf
+  file:
+    path: /etc/php-fpm.d
+    owner: root
+    group: root
+    recurse: yes
+- name: Restart php-fpm
+  service:
+    name: php-fpm
+    state: restarted

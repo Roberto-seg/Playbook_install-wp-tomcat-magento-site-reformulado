@@ -1,0 +1,38 @@
+---
+# tasks file for Criando_diretorios
+
+- name: Criando /var/www
+  file:
+    path: /var/www
+    state: directory
+    mode: '0755'
+- name: Criando /var/www/html
+  file:
+    path: /var/www/html
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+    recurse: yes
+- name: Criando /var/www/html/blog1.segundorobtech.tk
+  file:
+    path: /var/www/html/blog1.segundorobtech.tk
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+- name: Criando /var/www/html/loja1.segundorobtech.tk
+  file:
+    path: /var/www/html/loja1.segundorobtech.tk
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+- name: Criando /var/www/html/segundorobtech.tk
+  file:
+    path: /var/www/html/segundorobtech.tk
+    mode: '0755'
+    owner: nginx
+    group: nginx
+    state: directory
+      
