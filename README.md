@@ -38,5 +38,4 @@ ansible-playbook -i hosts site.yml
 Esta playbook fei desenvolvida como base de estudo, na ferramenta Ansible.
 
 # Atualização futuras.
-- [ ] Dividir o site.yml para melhor orgalização, e testes
 - [ ] Implementar variáveis para senhas
